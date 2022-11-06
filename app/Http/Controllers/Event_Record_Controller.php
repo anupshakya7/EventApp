@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event_Record;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class Event_Record_Controller extends Controller
@@ -117,4 +118,30 @@ class Event_Record_Controller extends Controller
             ]);
         }
     }
+
+    public function finishEvents(){
+        $today = Carbon::now();
+        $finishevent = Event_Record::whereDate('start_date', '<', $today->format('Y-m-d'))
+           ->whereDate('end_date', '<', $today->format('Y-m-d'))
+           ->get();
+
+        return response()->json([
+            "status"=>200,
+            "finish_events"=>$finishevent
+        ]);
+    }
+
+    public function upcomingEvents(){
+        $today = Carbon::now();
+        $upcomingevent = Event_Record::whereDate('start_date', '>', $today->format('Y-m-d'))
+           ->whereDate('end_date', '>', $today->format('Y-m-d'))
+           ->get();
+
+        return response()->json([
+            "status"=>200,
+            "upcoming_events"=>$upcomingevent
+        ]);
+    }
+
+
 }
