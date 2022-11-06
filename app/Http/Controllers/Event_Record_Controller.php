@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event_Record;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Model;
 
 class Event_Record_Controller extends Controller
 {
@@ -123,6 +124,7 @@ class Event_Record_Controller extends Controller
         $today = Carbon::now();
         $finishevent = Event_Record::whereDate('start_date', '<', $today->format('Y-m-d'))
            ->whereDate('end_date', '<', $today->format('Y-m-d'))
+           ->orderBy('start_date','asc')
            ->get();
 
         return response()->json([
@@ -135,11 +137,36 @@ class Event_Record_Controller extends Controller
         $today = Carbon::now();
         $upcomingevent = Event_Record::whereDate('start_date', '>', $today->format('Y-m-d'))
            ->whereDate('end_date', '>', $today->format('Y-m-d'))
+           ->orderBy('start_date','asc')
            ->get();
 
         return response()->json([
             "status"=>200,
             "upcoming_events"=>$upcomingevent
+        ]);
+    }
+
+    public function upcomingEventSeven(){
+        $today = Carbon::now();
+        $upcomingeventseven = Event_Record::whereDate('start_date', '>', $today->format('Y-m-d'))
+        ->orderBy('start_date','asc')
+        ->get();
+        return response()->json([
+            "status"=>200,
+            "upcoming_events_seven"=>$upcomingeventseven
+        ]);
+    }
+
+    public function finishEventSeven(){
+        $today = Carbon::now();
+        $finisheventseven = Event_Record::whereDate('start_date', '<', $today->format('Y-m-d'))
+           ->whereDate('end_date', '<', $today->format('Y-m-d'))
+           ->orderBy('start_date','asc')
+           ->get();
+
+        return response()->json([
+            "status"=>200,
+            "finish_events_seven"=>$finisheventseven
         ]);
     }
 

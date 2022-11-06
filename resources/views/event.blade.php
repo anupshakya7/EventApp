@@ -112,7 +112,6 @@
                     <h4 id="events_heading">
                         Events Record
                         <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Gold Item</button>
-                        <div id="reload-space"></div>
                     </h4>   
                 </div>
                 <!--End Card Header and Add Button Section-->
@@ -121,7 +120,7 @@
                 <div class="card-body">
                     <!--Search Table-->
                     <div class="dropdown mb-5">
-                        <button class="btn btn-sm btn-secondary dropdown-toggle float-end" style="width: 130px;" id="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                        <button class="btn btn-sm btn-secondary dropdown-toggle float-end" style="width: 250px;" id="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="true">
                           Choose Type
                         </button>
                         <ul class="dropdown-menu">
@@ -271,7 +270,7 @@
         var dataTable = document.getElementById('tableData');
         var heading = document.getElementById('events_heading');
         var dropdown = document.getElementById('dropdown');
-        var reload = document.getElementById('')
+        var reload = document.getElementById('reload-space');
         if(type == "finish"){   
             var req = new XMLHttpRequest();
             req.open("GET","finish-event",true);
@@ -281,7 +280,9 @@
                 if(req.readyState == 4 && req.status == 200){
                     var obj = JSON.parse(req.responseText);
                     dropdown.innerHTML = 'Finished Events';
-                    heading.innerHTML ="Finished Events Record";
+                    heading.innerHTML =`Finished Events Record 
+                    <button type="button" class="btn btn-danger btn-sm float-end" onclick="location.reload()">Reload</button>
+                    `;
                     dataTable.innerHTML = "";
                     for(let i=0; i< obj.finish_events.length;i++){
                         dataTable.innerHTML += `<tr>
@@ -319,7 +320,6 @@
                 }
             }
         }else if(type == "upcoming"){
-           
             var req = new XMLHttpRequest();
             req.open("GET","upcoming-event",true);
             req.send();
@@ -328,7 +328,9 @@
                 if(req.readyState == 4 && req.status==200){
                     var obj = JSON.parse(req.responseText);
                     dropdown.innerHTML = 'Upcoming events';
-                    heading.innerHTML ="Upcoming Events Record";
+                    heading.innerHTML =`Upcoming Events Record
+                    <button type="button" class="btn btn-danger btn-sm float-end" onclick="location.reload()">Reload</button>
+                    `;
                     dataTable.innerHTML = "";
                     for(let i=0; i<obj.upcoming_events.length;i++){
                         dataTable.innerHTML += `<tr>
@@ -351,44 +353,64 @@
         }else if(type == "upcomingwithseven"){
            
            var req = new XMLHttpRequest();
-           req.open("GET","silver-calculate",true);
+           req.open("GET","upcoming-event-seven",true);
            req.send();
 
            req.onreadystatechange = function(){
                if(req.readyState == 4 && req.status==200){
                    var obj = JSON.parse(req.responseText);
                    dropdown.innerHTML = 'Upcoming events within 7 days';
-                   heading.innerHTML ="Upcoming events within 7 days Record";
+                   heading.innerHTML =`Upcoming events within 7 days Record
+                   <button type="button" class="btn btn-danger btn-sm float-end" onclick="location.reload()">Reload</button>
+                   `;
                    dataTable.innerHTML = "";
-                   for(let i=0; i<obj.silver.length;i++){
-                       dataTable.innerHTML += `<tr>
-                           <td>`+obj.silver[i].item_code+`</td>
-                           <td>`+obj.silver[i].item_name+`</td>
-                           <td>`+obj.silver[i].item_tola+`</td>
-                           <td><a href="{{url('calculators/`+obj.silver[i].id+`')}}" class="btn btn-danger btn-sm">Calculate</a></td>
-                       </tr>`
+                   for(let i=0; i<obj.upcoming_events_seven.length;i++){
+                    dataTable.innerHTML += `<tr>
+                                <td>`+(i+1)+`</td>
+                                <td>`+obj.upcoming_events_seven[i].event_title+`</td>
+                                <td style="width: 450px;">`+obj.upcoming_events_seven[i].event_description+`</td>
+                                <td>
+                                    <span class='badge shadow text-bg-primary'>Upcoming Events</span>
+                                </td>
+                                <td>`+obj.upcoming_events_seven[i].start_date+`</td>
+                                <td>`+obj.upcoming_events_seven[i].end_date+`</td>
+                                <td>
+                                    <button type="button" value="`+obj.upcoming_events_seven[i].id+`" class="editbtn btn btn-success btn-sm">Edit</button>
+                                    <button type="button" onclick="deleteEvent(`+obj.upcoming_events_seven[i].id+`)" class="deleteBtn btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>`
                    }
                }
            }
         }else if(type == "finishedwithseven"){
            
            var req = new XMLHttpRequest();
-           req.open("GET","silver-calculate",true);
+           req.open("GET","finish-event-seven",true);
            req.send();
 
            req.onreadystatechange = function(){
                if(req.readyState == 4 && req.status==200){
                    var obj = JSON.parse(req.responseText);
                    dropdown.innerHTML = 'Finished events of the last 7 days';
-                   heading.innerHTML ="Finished events of the last 7 days Record";
+                   heading.innerHTML =`Finished events of the last 7 days Record
+                   <button type="button" class="btn btn-danger btn-sm float-end" onclick="location.reload()">Reload</button>
+                   `;
                    dataTable.innerHTML = "";
-                   for(let i=0; i<obj.silver.length;i++){
-                       dataTable.innerHTML += `<tr>
-                           <td>`+obj.silver[i].item_code+`</td>
-                           <td>`+obj.silver[i].item_name+`</td>
-                           <td>`+obj.silver[i].item_tola+`</td>
-                           <td><a href="{{url('calculators/`+obj.silver[i].id+`')}}" class="btn btn-danger btn-sm">Calculate</a></td>
-                       </tr>`
+                   for(let i=0; i<obj.finish_events_seven.length;i++){
+                    dataTable.innerHTML += `<tr>
+                                <td>`+(i+1)+`</td>
+                                <td>`+obj.finish_events_seven[i].event_title+`</td>
+                                <td style="width: 450px;">`+obj.finish_events_seven[i].event_description+`</td>
+                                <td>
+                                    <span class='badge shadow text-bg-danger'>Finished Events</span>
+                                </td>
+                                <td>`+obj.finish_events_seven[i].start_date+`</td>
+                                <td>`+obj.finish_events_seven[i].end_date+`</td>
+                                <td>
+                                    <button type="button" value="`+obj.finish_events_seven[i].id+`" class="editbtn btn btn-success btn-sm">Edit</button>
+                                    <button type="button" onclick="deleteEvent(`+obj.finish_events_seven[i].id+`)" class="deleteBtn btn btn-danger btn-sm">Delete</button>
+                                </td>
+                            </tr>`
                    }
                }
            }

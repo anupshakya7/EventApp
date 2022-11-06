@@ -29,4 +29,6 @@ Route::put('update-event',[Event_Record_Controller::class,"update"]);
 Route::get('delete-event/{id}',[Event_Record_Controller::class,"destroy"]);
 Route::get('finish-event',[Event_Record_Controller::class,"finishEvents"]);
 Route::get('upcoming-event',[Event_Record_Controller::class,"upcomingEvents"]);
+Route::get('upcoming-event-seven',[Event_Record_Controller::class,"upcomingEventSeven"]);
+Route::get('finish-event-seven',[Event_Record_Controller::class,"finishEventSeven"]);
 //End Events Routes//
