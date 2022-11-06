@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event_Record;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\Eloquent\Model;
 
 class Event_Record_Controller extends Controller
 {
@@ -147,8 +146,10 @@ class Event_Record_Controller extends Controller
     }
 
     public function upcomingEventSeven(){
-        $today = Carbon::now();
-        $upcomingeventseven = Event_Record::whereDate('start_date', '>', $today->format('Y-m-d'))
+        $today = Carbon::now()->addDays(7);
+        $todays = Carbon::now();
+        $upcomingeventseven = Event_Record::whereDate('start_date', '<', $today->format('Y-m-d'))
+        ->whereDate('start_date','>',$todays->format('Y-m-d'))
         ->orderBy('start_date','asc')
         ->get();
         return response()->json([
@@ -158,9 +159,10 @@ class Event_Record_Controller extends Controller
     }
 
     public function finishEventSeven(){
-        $today = Carbon::now();
-        $finisheventseven = Event_Record::whereDate('start_date', '<', $today->format('Y-m-d'))
-           ->whereDate('end_date', '<', $today->format('Y-m-d'))
+        $today = Carbon::now()->subDay(7);
+        $todays = Carbon::now();
+        $finisheventseven = Event_Record::whereDate('end_date', '>', $today->format('Y-m-d'))
+        ->whereDate('end_date','<',$todays->format('Y-m-d'))
            ->orderBy('start_date','asc')
            ->get();
 
